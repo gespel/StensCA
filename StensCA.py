@@ -1,6 +1,13 @@
 import copy
 import time
+from random import random
 
+
+def zufallszahl():
+    if random() < 0.4:
+        return 1
+    else:
+        return 0
 
 class StensCA:
     height = 10
@@ -13,7 +20,7 @@ class StensCA:
         for i in range(0, self.width):
             tmp = []
             for j in range(0, self.height):
-                tmp.append(0)
+                tmp.append(zufallszahl())
             self.board.append(tmp)
 
     def print_board(self):
@@ -38,6 +45,14 @@ class StensCA:
                     out += 1
                 if self.board[x][y+1] == 1:
                     out += 1
+                if self.board[x-1][y-1] == 1:
+                    out += 1
+                if self.board[x-1][y+1] == 1:
+                    out += 1
+                if self.board[x+1][y-1] == 1:
+                    out += 1
+                if self.board[x-1][y+1] == 1:
+                    out += 1
         return out
 
     def simulate(self):
@@ -45,10 +60,17 @@ class StensCA:
         for x in range(0, self.width):
             for y in range(0, self.height):
                 n = self.get_neighbors_num(x, y)
-                if n == 2 or n == 1:
-                    new[x][y] = 1
-                else:
-                    new[x][y] = 0
+                if self.board[x][y] == 0:
+                    if n == 3:
+                        new[x][y] = 1
+
+                if self.board[x][y] == 1:
+                    if n < 2:
+                        new[x][y] = 0
+                    if n == 2 or n == 3:
+                        new[x][y] = 1
+                    if n > 3:
+                        new[x][y] = 0
         self.board = new
 
     def get_board(self):
@@ -61,9 +83,15 @@ s.set_cell(4, 3, 1)
 s.set_cell(5, 2, 1)
 s.set_cell(6, 3, 1)
 s.set_cell(7, 4, 1)
+s.set_cell(4, 4, 1)
+s.set_cell(5, 4, 1)
+s.set_cell(5, 5, 1)
+s.set_cell(6, 5, 1)
+s.set_cell(4, 3, 1)
+s.set_cell(3, 2, 1)
 s.print_board()
 
 while True:
     s.simulate()
     s.print_board()
-    time.sleep(0.05)
+    time.sleep(0.2)
